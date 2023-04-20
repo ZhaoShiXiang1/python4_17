@@ -157,33 +157,32 @@ class StaticPicture:
 # print(t.dir_name('http://www.cgtpw.com/ctmn/12600.html',"",'<h1>(.*?)</h1>','D:\\mn\\'))
 #########################################################################################################
 #获取首页几大模块的网址（目前八个）
-t=StaticPicture()
-sum_list=[]
-one_catalog=t.get_one_catalog("http://www.cgtpw.com/",'<a href="(.*?)" title=".{4,5}">.{4,5}</a>')#获取首页8个目录下当页一级目录
-for list1 in one_catalog:
-    one_catalog_sum=t.get_one_catalog_sum(list1,'<li><a href="/'+str(re.findall('http://www.cgtpw.com/(.*?)/',list1)[-1])+'/index_(\d*?)\.html">尾页</a><li>')#获取8个目录下所有的一级目录
-    for list2 in one_catalog_sum:
-        two_catalog=t.get_two_catalog(list2,'<a href="(.*?)" title=".*?" target=".*?"><img src=.*? alt=".*?"></a>')#获取一级目录下面当页的二级目录
-        for list3 in two_catalog:
-            two_catalog_sum=t.get_two_catalog_sum(list3,'<a>共(.*?)页: </a>','(.*?).html')#取一级目录下面所有的二级目录
-            t.num1=len(two_catalog_sum)
-            for list4 in two_catalog_sum:
-                dir_name=t.dir_name(list4,"",'<h1>(.*?)</h1>','D:\\mn\\')
-                t.num2=t.num2+1
-                print("下载总进度"+str(t.num2)+'/'+str(t.num1))
-                t.downLoad(list4,dir_name,'<p align="center"><img src="(.*?)" alt="" /></p>')
-                # print("下载总进度"+str(t.num2)+'/'+str(t.num1))
-                # t.downLoad(list4,dir_name,'<p align="center"><img src="(.*?)" alt="" /></p>')
+# t=StaticPicture()
+# sum_list=[]
+# one_catalog=t.get_one_catalog("http://www.cgtpw.com/",'<a href="(.*?)" title=".{4,5}">.{4,5}</a>')#获取首页8个目录下当页一级目录
+# for list1 in one_catalog:
+#     one_catalog_sum=t.get_one_catalog_sum(list1,'<li><a href="/'+str(re.findall('http://www.cgtpw.com/(.*?)/',list1)[-1])+'/index_(\d*?)\.html">尾页</a><li>')#获取8个目录下所有的一级目录
+#     for list2 in one_catalog_sum:
+#         two_catalog=t.get_two_catalog(list2,'<a href="(.*?)" title=".*?" target=".*?"><img src=.*? alt=".*?"></a>')#获取一级目录下面当页的二级目录
+#         for list3 in two_catalog:
+#             two_catalog_sum=t.get_two_catalog_sum(list3,'<a>共(.*?)页: </a>','(.*?).html')#取一级目录下面所有的二级目录
+#             t.num1=len(two_catalog_sum)
+#             for list4 in two_catalog_sum:
+#                 dir_name=t.dir_name(list4,"",'<h1>(.*?)</h1>','D:\\mn\\')
+#                 t.num2=t.num2+1
+#                 print("下载总进度"+str(t.num2)+'/'+str(t.num1))
+#                 t.downLoad(list4,dir_name,'<p align="center"><img src="(.*?)" alt="" /></p>')
 ################################################################################################
 
-
-# # 利用循环将页面其他隐藏页面网址全部获取
-# url_list =[]#存储网址
-# for lists in urls_lists :
-#     url_list=t.get_urls(lists,'<a>共(.*?)页: </a>','http://www.cgtpw.com/xgmn/(.*?).html')
-# t.num1=len(url_list)
-# for list3 in url_list:
-#     dir_name=t.dir_name(list3,"",'<h1>(.*?)</h1>','C:\mn\\')
-#     t.num2=t.num2+1
-#     print("下载总进度"+str(t.num2)+'/'+str(t.num1))
-#     t.downLoad(list3,dir_name,'<p align="center"><img src="(.*?)" alt="" /></p>')
+#####################################只下载xxmn
+t=StaticPicture()
+sum_list=[]
+two_catalog=t.get_two_catalog('http://www.cgtpw.com/xgmn/','<a href="(.*?)" title=".*?" target=".*?"><img src=.*? alt=".*?"></a>')#获取一级目录下面当页的二级目录
+for list3 in two_catalog:
+    two_catalog_sum=t.get_two_catalog_sum(list3,'<a>共(.*?)页: </a>','(.*?).html')#取一级目录下面所有的二级目录
+    t.num1=len(two_catalog_sum)
+    for list4 in two_catalog_sum:
+        dir_name=t.dir_name(list4,"",'<h1>(.*?)</h1>','D:\\mn\\')
+        t.num2=t.num2+1
+        print("下载总进度"+str(t.num2)+'/'+str(t.num1))
+        t.downLoad(list4,dir_name,'<p align="center"><img src="(.*?)" alt="" /></p>')
