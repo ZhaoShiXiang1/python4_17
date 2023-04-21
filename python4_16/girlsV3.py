@@ -175,11 +175,11 @@ for list1 in one_catalog:
             sum_list5=t.get_two_catalog_sum(list3,'<a>共(.*?)页: </a>','(.*?).html')#取一级目录下面所有的二级目录
 
 t.num1=len(sum_list5)
-            # for list4 in two_catalog_sum:
-            #     dir_name=t.dir_name(list4,"",'<h1>(.*?)</h1>','D:\\mn\\')
-            #     t.num2=t.num2+1
-            #     print("下载总进度"+str(t.num2)+'/'+str(t.num1))
-            #     t.downLoad(list4,dir_name,'<p align="center"><img src="(.*?)" alt="" /></p>')
+#             for list4 in two_catalog_sum:
+#                 dir_name=t.dir_name(list4,"",'<h1>(.*?)</h1>','D:\\mn\\')
+#                 t.num2=t.num2+1
+#                 print("下载总进度"+str(t.num2)+'/'+str(t.num1))
+#                 t.downLoad(list4,dir_name,'<p align="center"><img src="(.*?)" alt="" /></p>')
 ################################################################################################
 
 #####################################只下载xxmn
