@@ -135,11 +135,17 @@ class StaticPicture:
         HTML=request.text
         # 正则匹配到所有的图片地址
         #加入判断根据判断调整正则格式
+        tmp9=re.findall(ze,HTML)
+        if len(tmp9)==0 and ze=='<img alt=".*?"(  | )src="(.*?)" />':
+            ze='<img src="(.*?)" alt=".*?"( class=".*?"| /)>'
+            tmp9=re.findall(ze,HTML)
+        if len(tmp9)==0 and ze=='<img src="(.*?)" alt=".*?"( class=".*?"| /)>':
+            ze='<img alt=".*?"(  | )src="(.*?)" />'
+            tmp9=re.findall(ze,HTML)
         if ze=='<img alt=".*?"(  | )src="(.*?)" />':
             tmp5=1
         else:
             tmp5=0
-        tmp9=re.findall(ze,HTML)
         for tmp in tmp9:
             urls.append(tmp[tmp5])
         # 遍历下载
@@ -175,7 +181,9 @@ class StaticPicture:
 t=StaticPicture()
 t.num1=272833
 sum_list5=[]
-one_catalog=t.get_one_catalog("http://www.cgtpw.com/",'<a href="(.*?)" title=".{4,5}">.{4,5}</a>')#获取首页8个目录下当页一级目录
+# one_catalog=t.get_one_catalog("http://www.cgtpw.com/",'<a href="(.*?)" title=".{4,5}">.{4,5}</a>')#获取首页8个目录下当页一级目录
+# print(one_catalog)
+one_catalog=['http://www.cgtpw.com/nymn/', 'http://www.cgtpw.com/bjnmn/', 'http://www.cgtpw.com/xgmn/', 'http://www.cgtpw.com/ctmn/', 'http://www.cgtpw.com/qcmn/', 'http://www.cgtpw.com/jpmn/', 'http://www.cgtpw.com/mnmx/', 'http://www.cgtpw.com/wgmn/']
 print(one_catalog)
 for list1 in one_catalog:
     if list=='http://www.cgtpw.com/mnmx/'or list=='http://www.cgtpw.com/mnmx/':
@@ -187,11 +195,14 @@ for list1 in one_catalog:
         two_catalog=t.get_two_catalog(list2,'<a href="(.*?)" title=".*?" target=".*?"><img src=.*? alt=".*?"></a>')#获取一级目录下面当页的二级目录
         for list3 in two_catalog:
             two_catalog_sum=t.get_two_catalog_sum(list3,'<a>共(.*?)页: </a>','(.*?).html')#取一级目录下面所有的二级目录
+            fo = open("foo.txt", "a")
             for list4 in two_catalog_sum:
+                fo.write(list4+'\n')
                 dir_name=t.dir_name(list4,"",'<h1>(.*?)</h1>','D:\\mn\\')
                 t.num2=t.num2+1
                 print("下载总进度"+str(t.num2)+'/'+str(t.num1))
                 t.downLoad(list4,dir_name,t.ze)
+            fo.close()
 ################################################################################################
 
 #####################################只下载xxmn
