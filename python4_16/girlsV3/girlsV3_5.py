@@ -123,17 +123,20 @@ class StaticPicture:
     #time:单次下载需要等待的时间单位为秒
     def downLoad(self,url:str,dir_name:str,ze:str):
         urls=[]
-        print("------------------")
+
         # 创建文件夹
         if os.path.exists(dir_name):
-            return
+            if len(os.listdir(dir_name))==0:
+                dir_name=dir_name
+            else:
+                return ''
         if not os.path.exists(dir_name):
             try:
                 os.mkdir(dir_name)
             except FileNotFoundError:
                 os.makedirs(dir_name)
             else:
-                dir_name='D:\\mn\\nymn\\test'
+                dir_name='D:\\mn\\qcmn\\test'
 
         # 放入网址请求网页代码
         request=requests.get(url)
@@ -159,14 +162,16 @@ class StaticPicture:
         for url in urls:
             # print(url)
             #文件名称默认以后缀作为命名
-            file_name:str=url.split('/')[-1]
+            file_name=url.split('/')[-1]
             # time.sleep(time)
             request= requests.get(url)
             try:
                 with open(dir_name+'/'+file_name,'wb') as f:
                     f.write(request.content)
             except OSError:
-                return ''
+                with open(dir_name+'/'+file_name.split('\"')[0],'wb') as f:
+                    f.write(request.content)
+
 
 
 
@@ -192,7 +197,7 @@ t.num1=272833
 sum_list5=[]
 # one_catalog=t.get_one_catalog("http://www.cgtpw.com/",'<a href="(.*?)" title=".{4,5}">.{4,5}</a>')#获取首页8个目录下当页一级目录
 # print(one_catalog)
-one_catalog=['http://www.cgtpw.com/nymn/']
+one_catalog=['http://www.cgtpw.com/qcmn/']
 print(one_catalog)
 for list1 in one_catalog:
     if list=='http://www.cgtpw.com/mnmx/'or list=='http://www.cgtpw.com/mnmx/':
@@ -204,7 +209,7 @@ for list1 in one_catalog:
         two_catalog=t.get_two_catalog(list2,'<a href="(.*?)" title=".*?" target=".*?"><img src=.*? alt=".*?"></a>')#获取一级目录下面当页的二级目录
         for list3 in two_catalog:
             two_catalog_sum=t.get_two_catalog_sum(list3,'<a>共(.*?)页: </a>','(.*?).html')#取一级目录下面所有的二级目录
-            fo = open("foo_1.txt", "a")
+            fo = open("foo_5.txt", "a")
             for list4 in two_catalog_sum:
                 fo.write(list4+'\n')
                 dir_name=t.dir_name(list4,"",'<h1>(.*?)</h1>','D:\\mn\\')
@@ -212,7 +217,6 @@ for list1 in one_catalog:
                 print("下载总进度"+str(t.num2)+'/'+str(t.num1))
                 t.downLoad(list4,dir_name,t.ze)
             fo.close()
-
 ################################################################################################
 
 #####################################只下载xxmn

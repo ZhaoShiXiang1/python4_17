@@ -63,8 +63,8 @@ class StaticPicture:
         two_catalog=[]
         str1=requests.get(url)
         # print(str1)
-        #使用固定模块进行解码
         # print(str1.text.replace(';', '').replace('&#x', '\\u').encode('utf-8').decode('unicode_escape'))
+        #使用固定模块进行解码
         # 使用正表达式获取网页中需要的标签网址（或许的是截取的网址编号）
         list0=re.findall(ze,str1.text)
         # print(list0)
@@ -114,8 +114,10 @@ class StaticPicture:
             request=requests.get(url)
             request.encoding = request.apparent_encoding
             html=request.text
-
-            return lujing+list2+'\\'+re.findall(ze1,html)[-1]
+            try:
+                return lujing+list2+'\\'+re.findall(ze1,html)[-1]
+            except:
+                return ''
 
     #下载文件的方法提供一个地址，文件夹路径，匹配网址的正则，单词下载等待的时间
 
@@ -126,16 +128,22 @@ class StaticPicture:
 
         # 创建文件夹
         if os.path.exists(dir_name):
-            return
+            if len(os.listdir(dir_name))==0:
+               dir_name=dir_name
+            else:
+               return ''
         if not os.path.exists(dir_name):
             try:
                 os.mkdir(dir_name)
             except FileNotFoundError:
-                os.makedirs(dir_name)
+                try:
+                    os.makedirs(dir_name)
+                except:
+                    dir_name='D:\\mn\\mnmx\\test'
             else:
-                dir_name='D:\\mn\\wgmn\\test'
+                dir_name='D:\\mn\\mnmx\\test'
 
-        # 放入网址请求网页代码
+                # 放入网址请求网页代码
         request=requests.get(url)
         # 防止网页中文乱码
         request.encoding = request.apparent_encoding
@@ -162,11 +170,8 @@ class StaticPicture:
             file_name=url.split('/')[-1]
             # time.sleep(time)
             request= requests.get(url)
-            try:
-                with open(dir_name+'/'+file_name,'wb') as f:
-                    f.write(request.content)
-            except OSError:
-                return ''
+            with open(dir_name+'/'+file_name,'wb') as f:
+                f.write(request.content)
 
 
 
@@ -193,7 +198,7 @@ t.num1=272833
 sum_list5=[]
 # one_catalog=t.get_one_catalog("http://www.cgtpw.com/",'<a href="(.*?)" title=".{4,5}">.{4,5}</a>')#获取首页8个目录下当页一级目录
 # print(one_catalog)
-one_catalog=['http://www.cgtpw.com/wgmn/']
+one_catalog=['http://www.cgtpw.com/mnmx/']
 print(one_catalog)
 for list1 in one_catalog:
     if list=='http://www.cgtpw.com/mnmx/'or list=='http://www.cgtpw.com/mnmx/':
@@ -205,7 +210,7 @@ for list1 in one_catalog:
         two_catalog=t.get_two_catalog(list2,'<a href="(.*?)" title=".*?" target=".*?"><img src=.*? alt=".*?"></a>')#获取一级目录下面当页的二级目录
         for list3 in two_catalog:
             two_catalog_sum=t.get_two_catalog_sum(list3,'<a>共(.*?)页: </a>','(.*?).html')#取一级目录下面所有的二级目录
-            fo = open("foo_8.txt", "a")
+            fo = open("foo_7.txt", "a")
             for list4 in two_catalog_sum:
                 fo.write(list4+'\n')
                 dir_name=t.dir_name(list4,"",'<h1>(.*?)</h1>','D:\\mn\\')

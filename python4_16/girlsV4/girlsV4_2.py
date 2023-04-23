@@ -2,7 +2,9 @@ import requests
 import requests
 import re
 import os
-
+headers={
+  'user-agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36 Edg/112.0.1722.48'
+}
 class StaticPicture:
   ze=''
   num1=0#记录网址总数
@@ -58,6 +60,11 @@ class StaticPicture:
     for url in urls:
       print(url)
       file_name=url.split('/')[-1]
+      try:
+        file_name=re.findall('(.*?)" .*?',file_name)[-1]
+      except:
+        return ""
+      print(file_name)
       with open(dir_name+'/'+file_name,'wb') as f:
         f.write(request.content)
 
@@ -66,14 +73,14 @@ class StaticPicture:
 t=StaticPicture()
 t.num1=272833
 sum_list5=[]
-f = open("girlsV4/foo_sum.txt") # 返回一个文件对象
-fo=open('foo_sum_download.txt', "a")
+f = open("foo_sum_2.txt") # 返回一个文件对象
+fo=open('foo_sum_2_download.txt', "a")
 line = f.readline() # 调用文件的 readline()方法
 while line:
   fo.write(line)#写入其他文件
   line=line.replace('\n', '')#替换掉换行符
   #通过URL获取到HTML内容
-  request=requests.get(line)
+  request=requests.get(line,headers=headers,timeout=10)
   request.encoding = request.apparent_encoding
   #下载图片
   dir_name=t.dir_name(line,request,"",'<h1>(.*?)</h1>','D:\\mn\\')

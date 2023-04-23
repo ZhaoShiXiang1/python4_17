@@ -66,8 +66,8 @@ class StaticPicture:
 t=StaticPicture()
 t.num1=272833
 sum_list5=[]
-f = open("girlsV4/foo_sum.txt") # 返回一个文件对象
-fo=open('foo_sum_download.txt', "a")
+f = open("foo_sum_4.txt") # 返回一个文件对象
+fo=open('foo_sum_4_download.txt', "a")
 line = f.readline() # 调用文件的 readline()方法
 while line:
   fo.write(line)#写入其他文件

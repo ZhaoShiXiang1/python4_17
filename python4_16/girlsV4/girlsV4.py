@@ -6,7 +6,9 @@
 import requests
 import re
 import os
-
+headers={
+    'user-agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36 Edg/112.0.1722.48'
+}
 class StaticPicture:
     '此类针对取静态页面图片的处理'
     ze=''
@@ -17,7 +19,7 @@ class StaticPicture:
     def get_one_catalog(self,url:str,ze:str):
         #再套一层取首页网站上面的三个标签网址并做好拼接
         one_catalog=[]
-        str1=requests.get(url)
+        str1=requests.get(url,headers=headers)
         # print(str1)
         #使用固定模块进行解码
         # print(str1.text.replace(';', '').replace('&#x', '\\u').encode('utf-8').decode('unicode_escape'))
@@ -41,7 +43,7 @@ class StaticPicture:
         one_catalog_sum=[]
         #http://www.cgtpw.com/ctmn/
         # 第一步获取当前网页的html内容
-        request=requests.get(url)
+        request=requests.get(url,headers=headers)
         # 防止网页中文乱码
         request.encoding = request.apparent_encoding
         html=request.text
@@ -61,7 +63,7 @@ class StaticPicture:
     def get_two_catalog(self,url:str,ze:str):
         #再套一层取首页网站上面的三个标签网址并做好拼接
         two_catalog=[]
-        str1=requests.get(url)
+        str1=requests.get(url,headers=headers)
         # print(str1)
         #使用固定模块进行解码
         # print(str1.text.replace(';', '').replace('&#x', '\\u').encode('utf-8').decode('unicode_escape'))
@@ -83,7 +85,7 @@ class StaticPicture:
         two_catalog_sum=[]
         list2=re.findall(ze2,url)[-1]
         # 第一步获取当前网页的html内容
-        request=requests.get(url)
+        request=requests.get(url,headers=headers)
         # 防止网页中文乱码
         request.encoding = request.apparent_encoding
         html=request.text
@@ -111,7 +113,7 @@ class StaticPicture:
         if len(url) ==0:
             return lujing+dir_name
         else:
-            request=requests.get(url)
+            request=requests.get(url,headers=headers)
             request.encoding = request.apparent_encoding
             html=request.text
 
@@ -120,23 +122,25 @@ class StaticPicture:
     #下载文件的方法提供一个地址，文件夹路径，匹配网址的正则，单词下载等待的时间
 
     # ze:符合条件的图片格式 <p align="center"><img src="(.*?)" alt="" /></p>
-    #time:单次下载需要等待的时间单位为秒
+    #time:单次下载需要等待的时间单位为秒---以单个页面进行下载
     def downLoad(self,url:str,dir_name:str,ze:str):
         urls=[]
-
         # 创建文件夹
         if os.path.exists(dir_name):
-            return
+            if len(os.listdir(dir_name))==0:
+                dir_name=dir_name
+            else:
+                return ''
         if not os.path.exists(dir_name):
             try:
                 os.mkdir(dir_name)
             except FileNotFoundError:
                 os.makedirs(dir_name)
-            else:
-                dir_name='D:\\mn\\ctmn\\test'
+            except:
+                dir_name='D:\\mn\\nymn\\test'
 
         # 放入网址请求网页代码
-        request=requests.get(url)
+        request=requests.get(url,headers=headers)
         # 防止网页中文乱码
         request.encoding = request.apparent_encoding
         HTML=request.text
@@ -159,16 +163,14 @@ class StaticPicture:
         for url in urls:
             # print(url)
             #文件名称默认以后缀作为命名
-            file_name=url.split('/')[-1]
+            file_name:str=url.split('/')[-1]
             # time.sleep(time)
-            request= requests.get(url)
+            request= requests.get(url,headers=headers)
             try:
                 with open(dir_name+'/'+file_name,'wb') as f:
                     f.write(request.content)
             except OSError:
-                with open(dir_name+'/'+url,'wb') as f:
-                    f.write(request.content)
-
+                return ''
 
 
 
@@ -189,15 +191,17 @@ class StaticPicture:
 # print(t.dir_name('http://www.cgtpw.com/ctmn/12600.html',"",'<h1>(.*?)</h1>','D:\\mn\\'))
 #########################################################################################################
 # 获取首页几大模块的网址（目前八个）
+
+
 t=StaticPicture()
 t.num1=272833
 sum_list5=[]
 # one_catalog=t.get_one_catalog("http://www.cgtpw.com/",'<a href="(.*?)" title=".{4,5}">.{4,5}</a>')#获取首页8个目录下当页一级目录
 # print(one_catalog)
-one_catalog=['http://www.cgtpw.com/ctmn/']
+one_catalog=['http://www.cgtpw.com/nymn/', 'http://www.cgtpw.com/bjnmn/', 'http://www.cgtpw.com/xgmn/', 'http://www.cgtpw.com/ctmn/', 'http://www.cgtpw.com/qcmn/', 'http://www.cgtpw.com/jpmn/', 'http://www.cgtpw.com/mnmx/', 'http://www.cgtpw.com/wgmn/']
 print(one_catalog)
 for list1 in one_catalog:
-    if list=='http://www.cgtpw.com/mnmx/'or list=='http://www.cgtpw.com/mnmx/':
+    if list=='http://www.cgtpw.com/nymn/'or list=='http://www.cgtpw.com/mnmx/':
         t.ze='<img alt=".*?"(  | )src="(.*?)" />'
     else:
         t.ze='<img src="(.*?)" alt=".*?"( class=".*?"| /)>'
@@ -206,14 +210,15 @@ for list1 in one_catalog:
         two_catalog=t.get_two_catalog(list2,'<a href="(.*?)" title=".*?" target=".*?"><img src=.*? alt=".*?"></a>')#获取一级目录下面当页的二级目录
         for list3 in two_catalog:
             two_catalog_sum=t.get_two_catalog_sum(list3,'<a>共(.*?)页: </a>','(.*?).html')#取一级目录下面所有的二级目录
-            fo = open("foo_4.txt", "a")
+            fo = open("foo_sum.txt", "a")
             for list4 in two_catalog_sum:
                 fo.write(list4+'\n')
                 dir_name=t.dir_name(list4,"",'<h1>(.*?)</h1>','D:\\mn\\')
                 t.num2=t.num2+1
                 print("下载总进度"+str(t.num2)+'/'+str(t.num1))
-                t.downLoad(list4,dir_name,t.ze)
+                # t.downLoad(list4,dir_name,t.ze)
             fo.close()
+
 ################################################################################################
 
 #####################################只下载xxmn

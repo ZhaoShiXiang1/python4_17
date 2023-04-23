@@ -36,7 +36,10 @@ class StaticPicture:
       try:
         os.mkdir(dir_name)
       except FileNotFoundError:
-        os.makedirs(dir_name)
+        try:
+          os.makedirs(dir_name)
+        except:
+          dir_name='D:\\mn\\'+list2+'\\test'
       except:
         dir_name='D:\\mn\\'+list2+'\\test'
     # 正则匹配到所有的图片地址
@@ -58,6 +61,11 @@ class StaticPicture:
     for url in urls:
       print(url)
       file_name=url.split('/')[-1]
+      try:
+        file_name=re.findall('(.*?)" .*?',file_name)[-1]
+      except:
+        return ""
+      print(file_name)
       with open(dir_name+'/'+file_name,'wb') as f:
         f.write(request.content)
 
@@ -66,8 +74,8 @@ class StaticPicture:
 t=StaticPicture()
 t.num1=272833
 sum_list5=[]
-f = open("girlsV4/foo_sum.txt") # 返回一个文件对象
-fo=open('foo_sum_download.txt', "a")
+f = open("foo_sum_8.txt") # 返回一个文件对象
+fo=open('foo_sum_8_download.txt', "a")
 line = f.readline() # 调用文件的 readline()方法
 while line:
   fo.write(line)#写入其他文件
